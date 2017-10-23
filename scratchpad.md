@@ -13,8 +13,9 @@ cd dev   # folder "dev" is what you want
 
 
 # Cloning(Downloading) example project
+```
 git clone https://github.com/SeiryuZ/my_expenses.git
-
+```
 
 # The web app
 We are going to create our own personal expenses calculator web application. The idea is for user to able to access the web app to enter their expenses, and get the list of expenses back and get a report where their money went.
@@ -75,11 +76,17 @@ from my_expenses.apps.expenses.models import Expense
 
 
 def expense_list(request):
+    # We retrieve all of our expenses in the database, we order them based on created time newest to oldest
     expenses = Expense.objects.all().order_by('-created')
+    
+    # We aggregate every expenses and sum them
     total = expenses.aggregate(Sum('amount'))['amount__sum']
+    
+    # We pass these variable to the templates
     context = {
         'expenses': expenses,
-        'total': total
+        'total': total,
+        'extra': "Ignored",   # Any extraneous variable that is not used by the template will be ignored
     }
     return render(request, 'index.html', context)
 ```
@@ -111,3 +118,23 @@ Now,we need to prepare the template file which is referenced by the view functio
 
 {% endblock %}
 ```
+
+This templates expects a variable called `expenses` and `total` to be passed by the views. It iterates through the `expenses` variable and print its attributes in a table.
+
+Now that we are done with the templates, we should hook the `urls.py` so requests are directed to the views we just created. We are going to catch an empty path or `root` or `/` as our path for the `expense_list` function. Open up `my_expenses/urls.py` and add the following
+
+```python
+from django.conf.urls import url
+from django.contrib import admin
+
+from .views import hello_world, expense_list, add_expense
+
+urlpatterns = [
+    url(r'^$', expense_list, name='index'),  # if client does not specify which page it want, assume it want to get expense_list
+    url(r'^hello-world/$', hello_world),  
+    url(r'^admin/', admin.site.urls),
+]
+
+```
+
+
