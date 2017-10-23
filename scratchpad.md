@@ -113,6 +113,7 @@ Expense.objects.exclude(type=1).all()
 Now we need to add a view function to list all expenses. To do that we are going to add some function to accept requests and render the correct response. Navigate to `my_expenses/views.py` and add the function below:
 
 ```python
+from django.db.models import Sum
 from django.shortcuts import render
 from my_expenses.apps.expenses.models import Expense
 
