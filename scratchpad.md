@@ -12,7 +12,7 @@ Open terminal with ctrl + alt + t # Linux
 cd dev   #  if folder "dev" is what you want
 
 
-# Cloning(Downloading) example project
+# Cloning(Downloading) our skeleton project
 ```
 git clone https://github.com/SeiryuZ/my_expenses.git
 ```
