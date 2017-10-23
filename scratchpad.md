@@ -189,3 +189,109 @@ python manage.py runserver 0:8000
 and access `localhost:8000` in your browser, it should show the expense list page correctly
 
 
+
+# Forms
+
+Now that we are able to see all of our expenses, we need to add a way for user to be able to add expenses via web browser. We don't want people to use the `shell` just to add expenses. To do that we are going to need the help of `forms` to validate the input. Create a new file `my_expenses/apps/expenses/forms.py` and add the following.
+
+```python
+from django import forms
+from my_expenses.apps.expenses.models import Expense
+
+
+# All forms need to subclass forms.Form, ModelForm is a subclass from From that
+# Automagically create forms from your model
+class AddExpenseForm(forms.ModelForm):
+
+    class Meta:
+        # We want this form to accept input only for Expense models attribute
+        model = Expense
+        
+        # But we don't want it to be able to accept value for created
+        exclude = ('created',)
+```
+
+After adding the form, we need to add the view function to `my_expenses/views.py`
+
+```python
+from django.db.models import Sum
+from django.shortcuts import render, redirect
+
+from my_expenses.apps.expenses.forms import AddExpenseForm
+from my_expenses.apps.expenses.models import Expense
+
+
+def add_expense(request):
+    # Initialize this form, and give it the sent value by client if any
+    form = AddExpenseForm(data=request.POST or None)
+    
+    # Validate whether the inputted value make sense
+    if form.is_valid():
+    
+        # If it made sense, we save it to the database and redirect to the expense list page
+        form.save()
+        return redirect('index')
+        
+    # The validation fails or no input was sent, we just render the form
+    context = {
+        'form': form,
+    }
+    return render(request, 'forms.html', context)
+
+
+# This is the same as before
+def expense_list(request):
+    ....
+
+
+```
+
+This view also reference a new template file called `forms.html`. We need to create that file on `templates/forms.html`
+
+```html+django
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <form action="" method="post">
+      {% csrf_token %}
+      {{ form }}
+      <button type="submit">Save</button>
+  </form>
+
+{% endblock %}
+```
+
+And once again, hook the urls so it can route requests to this page
+
+```python
+from django.conf.urls import url
+from django.contrib import admin
+
+from .views import hello_world, expense_list, add_expense
+
+urlpatterns = [
+    url(r'^add-expense$', add_expense, name='add'),
+    url(r'^$', expense_list, name='index'),
+    url(r'^hello-world/$', hello_world),
+    url(r'^admin/', admin.site.urls),
+]
+```
+
+We want to make it easy for people to open this page, so go back to `templates/index.html` and change one line that says
+```html+django
+    <a href="#">Add expense</a>
+```
+to
+```html+django
+    <a href="{% url 'add' %}">Add expense</a>
+```
+
+Now validate that our views are correct by running the server once again
+
+```bash
+python manage.py runserver 0:8000
+```
+
+and access `localhost:8000` in your browser, it should show the expense list page correctly and when you click on `add expense` link, it will take you to the correct page and you can enter a new expense. When you submit that page, it will add expense to the expense list.
+
