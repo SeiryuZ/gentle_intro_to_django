@@ -295,3 +295,25 @@ python manage.py runserver 0:8000
 
 and access `localhost:8000` in your browser, it should show the expense list page correctly and when you click on `add expense` link, it will take you to the correct page and you can enter a new expense. When you submit that page, it will add expense to the expense list.
 
+
+# Deployment
+
+To deploy our web app, make sure we save the state of our source code with the following command
+
+```bash
+# Add everything to staging state
+git add .   
+
+# Save the state with the message, you can change the message to anything
+git commit -am "Expenses index and add page"
+```
+
+We then need to
+* Login to [heroku](http://heroku.com/)
+* Create a new app, choose a unique name, for example `12345_expenses`
+* `heroku login`
+* `heroku git:remote -a 12345_expenses`
+* `git push heroku master`
+* `heroku open`
+
+
