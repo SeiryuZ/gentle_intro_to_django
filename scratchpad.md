@@ -1,21 +1,42 @@
-# Open terminal
+# Pre-requisites
 
-Click Start | Run | Enter "cmd"   # Windows
+## Windows
+Click Start | Run | Enter "cmd"
 
-Open terminal.app  # macOS
-
-Open terminal with ctrl + alt + t # Linux
-
-
-# navigate to folder you want, for example:
-
+```cmd
 cd dev   #  if folder "dev" is what you want
+git clone https://github.com/SeiryuZ/my_expenses.git  # this will download the project into a folder called "my_expenses"
+pip install virtualenvwrapper-win
+mkvirtualenv my_expenses -p python3
+workon my_expenses
+cd my_expenses
+pip install django==1.11.6
+```
+
+## macOS/linux
+Open terminal.app / terminal  # macOS
+```bash
+cd dev   #  if folder "dev" is what you want
+git clone https://github.com/SeiryuZ/my_expenses.git  # this will download the project into a folder called "my_expenses"
+pip install virtualenvwrapper
+```
+
+We need to add below three lines to your `~/.bashrc` for virtualenvwrapper to run correctly. Execute `nano ~/.bashrc` if you want to edit the files in the terminal or open the file with your favorite text editor and add these three lines to the bottom of the file. Save it, and you need to restart the terminal
+```
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Devel
+source /usr/local/bin/virtualenvwrapper.sh
+```
+
+After restarting terminal, command `mkvirtualenv` should be available. If it's not working, that means there are problems with the above steps.
+```bash
+mkvirtualenv my_expenses -p /usr/local/bin/python3
+workon my_expenses
+cd my_expenses
+pip install django==1.11.6
+```
 
 
-# Cloning(Downloading) our skeleton project
-```
-git clone https://github.com/SeiryuZ/my_expenses.git
-```
 
 # The web app
 We are going to create our own personal expenses calculator web application. The idea is for user to able to access the web app to enter their expenses, and get the list of expenses back and get a report where their money went.
