@@ -9,7 +9,7 @@ Open terminal with ctrl + alt + t # Linux
 
 # navigate to folder you want, for example:
 
-cd dev   # folder "dev" is what you want
+cd dev   #  if folder "dev" is what you want
 
 
 # Cloning(Downloading) example project
@@ -21,6 +21,17 @@ git clone https://github.com/SeiryuZ/my_expenses.git
 We are going to create our own personal expenses calculator web application. The idea is for user to able to access the web app to enter their expenses, and get the list of expenses back and get a report where their money went.
 
 The project that you have cloned are just a skeleton project, we will build the web app together.
+
+# Validate the skeleton web app is working
+To validate the web app is working, run the following command
+```python
+python manage.py runserver 0:8000
+```
+
+and access `localhost:8000` in your browser. It should show some basic Django Warning. 
+
+**Tip:** Leave this open in a separate tab
+
 
 # The models
 We are going to create models for our web app. The basic idea of the model is to think on what kinds of information we want to store and retrieve.
@@ -63,7 +74,38 @@ python manage.py migrate
 
 `makemigrations` command will create a "Migration file" that contains Django operation that represent an SQL statements to create appropriate tables for our model, everytime you change the model you need to run `makemigrations`. `migrate` command executes those instructions to the database.
 
-Now we have our database ready for accepting or retrieving expenses information.
+Now we have our database ready for accepting or retrieving expenses information. To test that the model persists information to the database correctly we can run python with our project's Django environment with the following command:
+
+```bash
+python manage.py shell
+```
+
+Once inside the shell
+```python
+# Import the model first
+from my_expenses.apps.expenses.models import Expense
+
+# Create some expenses by hand
+Expense.objects.create(description="KFC", amount=35000, type=1)
+Expense.objects.create(description="Hokben", amount=25000, type=1)
+Expense.objects.create(description="Bayar kosan", amount=2000000, type=3)
+Expense.objects.create(description="Bayar hutang", amount=30000, type=4)
+
+# Try to retrieve all expenses
+Expense.objects.all()
+
+# Get the first expenses
+Expense.objects.all().order_by('created').first()
+
+# last
+Expense.objects.all().order_by('created').last()
+
+# Get only "food" expenses
+Expense.objects.filter(type=1).all()
+
+# Get all expenses except "food"
+Expense.objects.exclude(type=1).all()
+```
 
 
 # urls.py, views.py, and templates
@@ -136,5 +178,13 @@ urlpatterns = [
 ]
 
 ```
+
+Now validate that our views are correct by running the server once again
+
+```bash
+python manage.py runserver 0:8000
+```
+
+and access `localhost:8000` in your browser, it should show the expense list page correctly
 
 
