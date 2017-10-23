@@ -314,6 +314,11 @@ We then need to
 * `heroku login`
 * `heroku git:remote -a 12345_expenses`
 * `git push heroku master`
+* `heroku run python manage.py migrate`
 * `heroku open`
+
+You can access the shell, if needed:
+* `heroku run python manage.py shell`
+
 
 
