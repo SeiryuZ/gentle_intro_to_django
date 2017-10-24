@@ -33,7 +33,7 @@ After restarting terminal, command `mkvirtualenv` should be available. If it's n
 mkvirtualenv my_expenses -p /usr/local/bin/python3
 workon my_expenses
 cd my_expenses
-pip install django==1.11.6
+pip install django==1.11.6 dj-database-url
 ```
 
 
