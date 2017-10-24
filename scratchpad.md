@@ -10,7 +10,7 @@ pip install virtualenvwrapper-win
 mkvirtualenv my_expenses -p python3
 workon my_expenses
 cd my_expenses
-pip install django==1.11.6
+pip install django==1.11.6 dj-database-url
 ```
 
 ## macOS/linux
